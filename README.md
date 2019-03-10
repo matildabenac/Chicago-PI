@@ -16,3 +16,11 @@ Projekt iz programskog inzinjerstva
 	D. git commit -m "poruka o dodavanju npr. dodajem xy i mjenaj xyz"
 	E. git push
 	F. ako sve prode ok na stranici od repozitorija bi trebali vidjet file koji ste upravo uploadali i/ili mjenjali (I sve ostale fileove)
+
+4. branch
+	A. novi branch: git branch ime_novog_brancha
+	B. promjena brancha: git checkout ime_brancha_u_koji_zelis_ic
+
+5. merge
+	A. odes u branch u kojem zelis da merge bude spremljen
+	B. git merge branch_s_kojim_mergas
