@@ -5,6 +5,11 @@ import weka.core.converters.ConverterUtils.DataSource;
 import weka.core.Instances;
 import weka.experiment.InstanceQuery;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Connection;
+
 
 public class Test {
 	
@@ -56,7 +61,35 @@ public class Test {
 			e.printStackTrace();
 		}
         
-        System.out.println(model);
+        //System.out.println(model);
+        
+        /*ConnectionManager cm = new ConnectionManager();
+        Connection conn = cm.createConnection();
+        Statement stmt = null;
+		try {
+			stmt = conn.createStatement();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+        ResultSet rs = null;
+        try {
+			rs = stmt.executeQuery("select Block, Primary_type, Description, Location_description, Arrest from Crime");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+        try {
+			while (rs.next())
+			{
+				System.out.print(rs.getString(1));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+        
     }
 
 }
