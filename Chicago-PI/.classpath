@@ -2,9 +2,8 @@
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="/home/marin/Documents/weka-3-8-3/weka.jar"/>
-	<classpathentry kind="lib" path="/home/marin/Documents/Chicago-PI/Chicago-PI/Chicago-PI/jgoodies-forms-1.8.0.jar"/>
-	<classpathentry kind="lib" path="/home/marin/Documents/Chicago-PI/Chicago-PI/Chicago-PI/jgoodies-forms-1.8.0-sources.jar"/>
-	<classpathentry kind="lib" path="/home/marin/Documents/Chicago-PI/Chicago-PI/Chicago-PI/miglayout15-swing.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ema/Desktop/weka-3-8-3/weka.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ema/Desktop/jgoodies-forms-1.8.0/jgoodies-forms-1.8.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ema/Desktop/jgoodies-forms-1.8.0/jgoodies-forms-1.8.0-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

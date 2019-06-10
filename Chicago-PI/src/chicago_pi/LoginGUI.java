@@ -8,6 +8,7 @@ import java.awt.GridBagLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
@@ -15,6 +16,10 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.awt.event.ActionEvent;
 import javax.swing.JPasswordField;
 import javax.swing.JSeparator;
@@ -126,29 +131,59 @@ public class LoginGUI{
     		add(separator3, c);
     		
     		c.gridy = 8;//set the y location of the grid for the next component   		 
-    		JButton btnNewButton = new JButton("LOG IN");
-    		btnNewButton.setBackground(UIManager.getColor("Button.focus"));
-    		btnNewButton.setFont(new Font("Raleway ExtraBold", Font.PLAIN, 15));
-    		btnNewButton.setForeground(UIManager.getColor("Button.focus"));
-    		btnNewButton.addActionListener(new ActionListener() {
+    		JButton btnLogin = new JButton("LOG IN");
+    		btnLogin.setBackground(UIManager.getColor("Button.focus"));
+    		btnLogin.setFont(new Font("Raleway ExtraBold", Font.PLAIN, 15));
+    		btnLogin.setForeground(UIManager.getColor("Button.focus"));
+    		btnLogin.addActionListener(new ActionListener() {
     			public void actionPerformed(ActionEvent e) {
+    				String password = passwordField.getText();
+    				String username = textField.getText();
+    				boolean postoji = false;
     				
-    				EventQueue.invokeLater(new Runnable() {
-    					public void run() {
-    						try {
-    							MainGUI window = new MainGUI();
-    							window.frame.setVisible(true);
-    						} catch (Exception e) {
-    							e.printStackTrace();
+    				try {
+    					Class.forName("com.mysql.cj.jdbc.Driver");
+    					
+    					// db promjenit u bazu koju koristimo (3306 promjenit ako je na nekom drugom portu)
+    					String db = "jdbc:mysql://localhost:3306/pi_korisnici?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+    					// user promjenit u user koji koristimo
+    					String user = "pi_user";
+    					// pass promjenit u pass kojeg koristimo
+    					String pass = "pi_user";
+    					
+    					// get connection
+    					Connection myConn = DriverManager.getConnection(db, user, pass);
+    					
+    					// create a statement
+    					Statement myStat = myConn.createStatement();
+    					
+    					// execute query
+    					ResultSet myRs = myStat.executeQuery("select * from korisnik");
+    					
+    					// process results
+    					while (myRs.next()) {
+    						//System.out.println(myRs.getString("username"));
+    						if (password.contains(myRs.getString("password")) && username.contains(myRs.getString("username"))) {
+    							passwordField.setText(null);
+    							textField.setText(null);	
+    							postoji = true;
+    							/*redirect na aplikaciju*/   							
+        							MainGUI window = new MainGUI();
+        							window.frame.setVisible(true);        					     			       						
     						}
     					}
-    				});
+    					if (!postoji) {
+    						JOptionPane.showMessageDialog(null, "Invalid login details.", "Login error", JOptionPane.ERROR_MESSAGE);
+    					}
+    				} catch (Exception exc) {
+    					exc.printStackTrace();
+    				}
     			}
     		});
     		
     		
-    		btnNewButton.setPreferredSize(new Dimension(150, 40));
-    		add(btnNewButton, c);
+    		btnLogin.setPreferredSize(new Dimension(150, 40));
+    		add(btnLogin, c);
     		
     		
         }
