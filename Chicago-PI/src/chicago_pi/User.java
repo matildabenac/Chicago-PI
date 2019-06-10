@@ -7,10 +7,12 @@ public class User {
 	private String FirstName;
 	private String LastName;
 	
-	public User(String username)
+	public User(String username, String password)
 	{
 		
 	}
+	
+	
 	
 	public String getUsername()
 	{

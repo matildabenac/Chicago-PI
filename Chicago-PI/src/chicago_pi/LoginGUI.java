@@ -29,10 +29,8 @@ public class LoginGUI{
   
     // JPasswodField 
     static JPasswordField passwordField; 
-
-    public static void main(String[] args) {
-        new LoginGUI();
-    }
+    JFrame frame = null;
+    JPanel content = null;
 
     public LoginGUI() {
         EventQueue.invokeLater(new Runnable() {
@@ -49,6 +47,7 @@ public class LoginGUI{
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.setBackground(Color.LIGHT_GRAY);
                 
+                
                 JPanel content = new JPanel(new GridBagLayout());  
                 content.setBackground(Color.LIGHT_GRAY);
                 content.setBorder(new EmptyBorder(20, 20, 20, 20));
@@ -56,7 +55,7 @@ public class LoginGUI{
                 frame.getContentPane().add(new LoginPane());
                 frame.pack();
                 frame.setLocationRelativeTo(null);
-                frame.setVisible(true);           
+                frame.setVisible(true);
             }
         });
     }
@@ -134,8 +133,20 @@ public class LoginGUI{
     		btnNewButton.addActionListener(new ActionListener() {
     			public void actionPerformed(ActionEvent e) {
     				
+    				EventQueue.invokeLater(new Runnable() {
+    					public void run() {
+    						try {
+    							MainGUI window = new MainGUI();
+    							window.frame.setVisible(true);
+    						} catch (Exception e) {
+    							e.printStackTrace();
+    						}
+    					}
+    				});
     			}
     		});
+    		
+    		
     		btnNewButton.setPreferredSize(new Dimension(150, 40));
     		add(btnNewButton, c);
     		

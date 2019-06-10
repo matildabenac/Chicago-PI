@@ -17,7 +17,7 @@ with open('Chicago_Crimes_2012_to_2017.csv', mode='r') as csv_file:
         if line_count == 0:
             # print(f'Column names are {", ".join(row)}')
             line_count += 1
-        date = datetime.datetime.strptime(row["Date"], '%m/%d/%Y %I:%M:%S %p')
+        date = datetime.datetime.strptime(row["Date"], '%m/%d/%Y %I:%M:%S %p').strftime('%Y-%m-%d %H:%M:%S')
         print(f'\t{row["ID"]}       {date}      {row["Block"]}      {row["Primary Type"]}       {row["Description"]}        {row["Location Description"]}       {row["Arrest"]}     {row["Domestic"]}')
 
         arrest = 0

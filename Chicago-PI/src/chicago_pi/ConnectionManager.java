@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.ResultSet;
 
 
 public class ConnectionManager {
@@ -12,32 +13,57 @@ public class ConnectionManager {
 	private static String password = "";
 	private static String DB_URL = "jdbc:mysql://localhost:3306/Chicago-PI?serverTimezone=UTC";
 	private static Connection conn = null;
+	Statement stmt = null;
 	
-	public ConnectionManager() {}
-	
-	public Connection createConnection()
-	{
-		//com.mysql.cj.jdbc.Driver
-		Connection conn = null;
+	public ConnectionManager() {
+		
 		try {
 			conn = DriverManager.getConnection(DB_URL, username, password);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return conn;
 	}
 	
-	public Statement createStatement()
+	public void CreateConnection()
 	{
-		Statement stmt = null;
+		//com.mysql.cj.jdbc.Driver
+		try {
+			conn = DriverManager.getConnection(DB_URL, username, password);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 		try {
 			stmt = conn.createStatement();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return stmt;
 	}
 	
+	public void CloseConnection()
+	{
+		try {
+			stmt.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public ResultSet sendQuery(String query)
+	{
+		ResultSet rs = null;
+		try {
+			rs = stmt.executeQuery(query);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return rs;
+	}
 }

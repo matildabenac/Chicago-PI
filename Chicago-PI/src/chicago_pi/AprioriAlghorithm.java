@@ -10,9 +10,11 @@ public class AprioriAlghorithm extends Search{
 
 	InstanceQuery query = null;
 	
-	public AprioriAlghorithm(int time_from, int time_to, String location, String type) {
+	public AprioriAlghorithm(String time_from, String time_to, String location, String type) {
 		super(time_from, time_to, location, type);
 		// TODO Auto-generated constructor stub
+		time_from = "'" + time_from + "'";
+		time_to = "'" + time_to + "'";
 		
 		try {
 			query = new InstanceQuery();
@@ -22,10 +24,19 @@ public class AprioriAlghorithm extends Search{
 		}
     	query.setUsername("root");
     	query.setPassword("");
-    	query.setQuery("select Block, Primary_type, Description, Location_description, Arrest from Crime");
+    	
+    	String Query = "SELECT Block, Primary_type, Description, Location_description, Arrest FROM Crime WHERE TIME(Date) >= " + time_from + "AND TIME(Date) < " + time_to;
+    	
+    	if(!location.contentEquals("All"))
+    		Query += "AND Block = " + location;
+    	
+    	if(!type.contentEquals("All"))
+    		Query += "AND Primary_type = '" + type + "'";
+    	
+    	query.setQuery(Query);
 	}
 	
-	public Apriori search()
+	public String search()
 	{
     	Instances data = null;
 		try {
@@ -43,7 +54,7 @@ public class AprioriAlghorithm extends Search{
 			e.printStackTrace();
 		}
         
-        return model;
+        return model.toString();
 	}
 
 }
