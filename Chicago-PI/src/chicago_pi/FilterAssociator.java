@@ -1,20 +1,21 @@
 package chicago_pi;
 
-import weka.associations.Apriori;
+
+import weka.associations.FilteredAssociator;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils.DataSource;
 import weka.core.Instances;
 import weka.experiment.InstanceQuery;
 
-public class AprioriAlghorithm extends Search{
-
+public class FilterAssociator extends Search{
+	
 	Instances data = null;
+	String err = "Baza nije u dobrom formatu";
 	private boolean MySQL = true;
 	int user_id;
 	String fileName = null;
-	String err = "Baza nije u dobrom formatu";
 	
-	public AprioriAlghorithm(String time_from, String time_to, String location, String type, int user_id) {
+	public FilterAssociator(String time_from, String time_to, String location, String type, int user_id) {
 		super(time_from, time_to, location, type);
 		// TODO Auto-generated constructor stub
 		
@@ -43,6 +44,7 @@ public class AprioriAlghorithm extends Search{
     	
     	query.setQuery(Query);
     	
+    	
 		try {
 			data = query.retrieveInstances();
 		} catch (Exception e1) {
@@ -51,9 +53,10 @@ public class AprioriAlghorithm extends Search{
 		}
 	}
 	
-	public AprioriAlghorithm(String filePath, int user_id, String fileName) {
+	public FilterAssociator(String filePath, int user_id, String fileName) {
 		super(filePath);
 		
+		this.user_id = user_id;
 		this.fileName = fileName;
 		
 		MySQL = false;
@@ -63,6 +66,7 @@ public class AprioriAlghorithm extends Search{
 			source = new DataSource(filePath);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			//e.printStackTrace();
 			;
 		}
 		
@@ -70,6 +74,7 @@ public class AprioriAlghorithm extends Search{
 			data = source.getDataSet();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			//e.printStackTrace();
 			;
 		}
 		
@@ -77,10 +82,10 @@ public class AprioriAlghorithm extends Search{
 	
 	public String search()
 	{
-        Apriori model = new Apriori();
+		
+        FilteredAssociator model = new FilteredAssociator();
         try {
 			model.buildAssociations(data);
-			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
@@ -92,13 +97,13 @@ public class AprioriAlghorithm extends Search{
         if(MySQL)
         {
         	cntMan.CreateConnection();
-        	cntMan.insertQuery("INSERT INTO History (id_user, Searched) VALUES (" + user_id + ", 'Apriori algoritam: Podrucje: " + location + "; Od:" + time_from + "; Do: " + time_to + "; Tip zlocina: " + type + "')");
+        	cntMan.insertQuery("INSERT INTO History (id_user, Searched) VALUES (" + user_id + ", 'Filtered Associator algoritam: Podrucje: " + location + "; Od:" + time_from + "; Do: " + time_to + "; Tip zlocina: " + type + "')");
         	cntMan.CloseConnection();
         }
         else
         {
         	cntMan.CreateConnection();
-        	cntMan.insertQuery("INSERT INTO History (id_user, Searched) VALUES (" + user_id + ", 'Apriori algoritam: Baza je ucitana iz datoteke: " + fileName + "')");
+        	cntMan.insertQuery("INSERT INTO History (id_user, Searched) VALUES (" + user_id + ", 'Filtered Associator algoritam: Baza je ucitana iz datoteke: " + fileName + "')");
         	cntMan.CloseConnection();
         }
         

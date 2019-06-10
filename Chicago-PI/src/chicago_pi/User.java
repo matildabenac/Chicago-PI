@@ -7,9 +7,12 @@ public class User {
 	private String FirstName;
 	private String LastName;
 	
-	public User(String username, String password)
+	public User(int id, String username, String FirstName, String LastName)
 	{
-		
+		this.id = id;
+		this.username = username;
+		this.FirstName = FirstName;
+		this.LastName = LastName;
 	}
 	
 	
@@ -27,6 +30,11 @@ public class User {
 	public String getLastName()
 	{
 		return LastName;
+	}
+	
+	public int getId()
+	{
+		return id;
 	}
 	
 }

@@ -2,10 +2,15 @@ package chicago_pi;
 
 import java.awt.EventQueue;
 
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.Dimension;
 import javax.swing.JTextPane;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.JScrollPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JTextArea;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.Color;
@@ -33,6 +38,7 @@ import java.sql.SQLException;
 public class MainGUI {
 
 	JFrame frame;
+	User user = null;
 
 	/**
 	 * Launch the application.
@@ -41,8 +47,10 @@ public class MainGUI {
 	/**
 	 * Create the application.
 	 */
-	public MainGUI() {
+	public MainGUI(User user) {
+		this.user = user;
 		initialize();
+		
 	}
 
 	/**
@@ -219,9 +227,9 @@ public class MainGUI {
 		
 		JComboBox comboBox_4 = new JComboBox();
 		comboBox_4.setFont(new Font("Raleway", Font.PLAIN, 15));
-		comboBox_4.setBounds(175, 420, 100, 27);
-		comboBox_4.addItem("sql"); 
-		comboBox_4.addItem("csv");
+		comboBox_4.setBounds(175, 420, 150, 27);
+		comboBox_4.addItem("MySQL"); 
+		comboBox_4.addItem("CSV datoteka");
 		panel_2.add(comboBox_4);
 		
 		JLabel algoritam = new JLabel("Algoritam");
@@ -232,7 +240,7 @@ public class MainGUI {
 		
 		JComboBox comboBox_5 = new JComboBox();
 		comboBox_5.setFont(new Font("Raleway", Font.PLAIN, 15));
-		comboBox_5.setBounds(175, 450, 100, 27);
+		comboBox_5.setBounds(175, 450, 150, 27);
 		comboBox_5.addItem("Apriori"); 
 		comboBox_5.addItem("Filtered Associator");
 		panel_2.add(comboBox_5);
@@ -252,18 +260,118 @@ public class MainGUI {
 		btnPovijestPretraivanja.setBounds(60, 575, 219, 35);
 		panel_2.add(btnPovijestPretraivanja);
 		
-		JTextPane pane = new JTextPane();
-		pane.setBounds(400, 130, 1000, 700);
-		frame.getContentPane().add(pane);
+		JTextArea pane = new JTextArea();
+		JScrollPane scroll = new JScrollPane(pane, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		scroll.setBounds(400, 130, 1000, 500);
+		scroll.setViewportView(pane);
+		// Add the scroll pane to the panel
+		frame.getContentPane().add(scroll);
 		
 		btnOdaberi.addActionListener(new ActionListener() {
 
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
 		    	
-		        AprioriAlghorithm apr = new AprioriAlghorithm(comboBox_1.getSelectedItem().toString(), comboBox_2.getSelectedItem().toString(), comboBox.getSelectedItem().toString(), comboBox_3.getSelectedItem().toString());
-		        String str = apr.search();
+		        String str = null;
+		    	Search alg = null;
+		        
+		        if(comboBox_4.getSelectedItem().toString().contentEquals("MySQL"))
+		        {
+		        	if(comboBox_5.getSelectedItem().toString().contentEquals("Apriori"))
+		        	{
+				    	alg = new AprioriAlghorithm(comboBox_1.getSelectedItem().toString(), comboBox_2.getSelectedItem().toString(), comboBox.getSelectedItem().toString(), comboBox_3.getSelectedItem().toString(), user.getId());
+				        str = ((AprioriAlghorithm) alg).search();
+		        	}
+		        	else if(comboBox_5.getSelectedItem().toString().contentEquals("Filtered Associator"))
+		        	{
+				    	alg = new FilterAssociator(comboBox_1.getSelectedItem().toString(), comboBox_2.getSelectedItem().toString(), comboBox.getSelectedItem().toString(), comboBox_3.getSelectedItem().toString(), user.getId());
+				    	str = ((FilterAssociator) alg).search();
+		        	}
+		        	
+		        	if(comboBox_1.getSelectedItem().toString().compareTo(comboBox_2.getSelectedItem().toString()) >= 0)
+		        	{
+		        		str = "Pocetno vrijeme mora biti manje od zavrsnog";
+		        	}
+		        	
+		        }
+		        else if(comboBox_4.getSelectedItem().toString().contentEquals("CSV datoteka"))
+		        {
+		            JFileChooser chooser = new JFileChooser();
+		            FileNameExtensionFilter filter = new FileNameExtensionFilter(
+		                    "CSV files", "csv");
+		            chooser.setFileFilter(filter);
+		            int returnVal = chooser.showOpenDialog(null);
+		            if(returnVal == JFileChooser.APPROVE_OPTION) {
+		                
+			        	if(comboBox_5.getSelectedItem().toString().contentEquals("Apriori"))
+			        	{
+					    	alg = new AprioriAlghorithm(chooser.getSelectedFile().getAbsolutePath(), user.getId(), chooser.getSelectedFile().getName());
+					        str = ((AprioriAlghorithm) alg).search();
+			        	}
+			        	else if(comboBox_5.getSelectedItem().toString().contentEquals("Filtered Associator"))
+			        	{
+					    	alg = new FilterAssociator(chooser.getSelectedFile().getAbsolutePath(), user.getId(), chooser.getSelectedFile().getName());
+					    	str = ((FilterAssociator) alg).search();
+			        	}
+		            }
+		            else str = "Moras odabrati datoteku";
+		        }
+		    	
 		        pane.setText(str);
+		    }
+		});
+		
+		
+		comboBox_4.addActionListener(new ActionListener()
+		{
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		    	
+		       if(comboBox_4.getSelectedItem().toString().contentEquals("CSV datoteka"))
+		       {
+		        	comboBox.setEnabled(false);
+		        	comboBox_1.setEnabled(false);
+		        	comboBox_2.setEnabled(false);
+		        	comboBox_3.setEnabled(false);
+		       }
+		       else
+		       {
+		            comboBox.setEnabled(true);
+		        	comboBox_1.setEnabled(true);
+		        	comboBox_2.setEnabled(true);
+		        	comboBox_3.setEnabled(true);
+		       }
+		    }
+		});
+		
+		
+		btnPovijestPretraivanja.addActionListener(new ActionListener() {
+
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		    	cntMan.CreateConnection();
+		    	
+		    	ResultSet rsHistory = cntMan.sendQuery("SELECT * FROM History WHERE id_user = " + user.getId());
+		    	String str = null;
+		    	try {
+					while (rsHistory.next()) {
+						str += rsHistory.getString("Searched") + " - " + rsHistory.getString("Date") + "\n";
+					}
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+		    	
+		    	pane.setText(str);
+		    	cntMan.CloseConnection();
+		    }
+		});
+		
+		btnLogOut.addActionListener(new ActionListener() {
+
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		    	frame.dispose();
 		    }
 		});
 		

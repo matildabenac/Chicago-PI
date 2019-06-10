@@ -29,14 +29,6 @@ public class ConnectionManager {
 	{
 		//com.mysql.cj.jdbc.Driver
 		try {
-			conn = DriverManager.getConnection(DB_URL, username, password);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-		try {
 			stmt = conn.createStatement();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -54,9 +46,20 @@ public class ConnectionManager {
 		}
 	}
 	
+	public void insertQuery(String query)
+	{
+		try {
+			stmt.executeUpdate(query);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public ResultSet sendQuery(String query)
 	{
 		ResultSet rs = null;
+		
 		try {
 			rs = stmt.executeQuery(query);
 		} catch (SQLException e) {
@@ -66,4 +69,7 @@ public class ConnectionManager {
 		
 		return rs;
 	}
+	
+	
+	
 }

@@ -142,36 +142,26 @@ public class LoginGUI{
     				boolean postoji = false;
     				
     				try {
-    					Class.forName("com.mysql.cj.jdbc.Driver");
     					
-    					// db promjenit u bazu koju koristimo (3306 promjenit ako je na nekom drugom portu)
-    					String db = "jdbc:mysql://localhost:3306/pi_korisnici?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
-    					// user promjenit u user koji koristimo
-    					String user = "pi_user";
-    					// pass promjenit u pass kojeg koristimo
-    					String pass = "pi_user";
-    					
-    					// get connection
-    					Connection myConn = DriverManager.getConnection(db, user, pass);
-    					
-    					// create a statement
-    					Statement myStat = myConn.createStatement();
-    					
+    					ConnectionManager cntMng = new ConnectionManager();
+    					cntMng.CreateConnection();
     					// execute query
-    					ResultSet myRs = myStat.executeQuery("select * from korisnik");
+    					ResultSet users = cntMng.sendQuery("select * from User");
     					
     					// process results
-    					while (myRs.next()) {
-    						//System.out.println(myRs.getString("username"));
-    						if (password.contains(myRs.getString("password")) && username.contains(myRs.getString("username"))) {
+    					while (users.next()) {
+    						if (password.contains(users.getString("Password")) && username.contains(users.getString("Username"))) {
     							passwordField.setText(null);
     							textField.setText(null);	
     							postoji = true;
-    							/*redirect na aplikaciju*/   							
-        							MainGUI window = new MainGUI();
-        							window.frame.setVisible(true);        					     			       						
+    							
+    							User user = new User(users.getInt("id"), users.getString("Username"), users.getString("FirstName"), users.getString("LastName"));
+        						MainGUI window = new MainGUI(user);
+        						window.frame.setVisible(true);
     						}
     					}
+    					
+    					cntMng.CloseConnection();
     					if (!postoji) {
     						JOptionPane.showMessageDialog(null, "Invalid login details.", "Login error", JOptionPane.ERROR_MESSAGE);
     					}
